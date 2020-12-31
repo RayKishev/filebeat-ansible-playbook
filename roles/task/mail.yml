@@ -1,0 +1,35 @@
+--- 
+
+#- name: Adding Elastic PGP key
+#  rpm_key: 
+#    key: 
+#    state: 
+
+- name: Adding Filebeat repository
+  become: yes
+  template:
+    src: devtools-yum.repo
+    dest: /etc/yum.repos.d/devtools-yum.repo
+
+- name: Installing filebeat from repo
+  yum: 
+    name: filebeat
+    state: present
+    update_cache: yes
+
+- name: Copying config file
+  template: 
+    src: filebeat.j2
+    dest: /etc/filebeat/filebeat.yml
+
+
+- name: Enabling filebeat.service
+  systemd: 
+    name: filebeat.service 
+    enabled: yes
+
+- name: Start filebeat.service
+  systemd: 
+    name: filebeat.service
+    state: restarted
+  become: true
