@@ -1,0 +1,7 @@
+---  
+
+- hosts: app-test
+  remote_user: root 
+  become: true
+  roles:
+    - filebeat
